@@ -1,0 +1,207 @@
+; ============================================
+; PHP.INI Configuration for Laravel Oracle API
+; ============================================
+; Copy this file to your PHP installation directory
+; and rename it to php.ini
+; ============================================
+
+[PHP]
+; Engine Settings
+engine = On
+short_open_tag = Off
+precision = 14
+output_buffering = 4096
+zlib.output_compression = Off
+implicit_flush = Off
+serialize_precision = -1
+disable_functions =
+disable_classes =
+zend.enable_gc = On
+zend.exception_ignore_args = On
+zend.exception_string_param_max_len = 0
+
+; Miscellaneous
+expose_php = On
+
+; Resource Limits
+max_execution_time = 120
+max_input_time = 60
+memory_limit = 256M
+
+; Error handling
+error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
+display_errors = On
+display_startup_errors = On
+log_errors = On
+ignore_repeated_errors = Off
+ignore_repeated_source = Off
+report_memleaks = On
+error_log = "php_errors.log"
+
+; Data Handling
+variables_order = "GPCS"
+request_order = "GP"
+register_argc_argv = Off
+auto_globals_jit = On
+post_max_size = 50M
+auto_prepend_file =
+auto_append_file =
+default_mimetype = "text/html"
+default_charset = "UTF-8"
+
+; Paths and Directories
+; IMPORTANT: Update this path to your Oracle Instant Client location
+extension_dir = "ext"
+sys_temp_dir = "C:/Windows/Temp"
+enable_dl = Off
+cgi.force_redirect = 1
+cgi.fix_pathinfo = 1
+
+; File Uploads
+file_uploads = On
+upload_tmp_dir = "C:/Windows/Temp"
+upload_max_filesize = 50M
+max_file_uploads = 20
+
+; Dynamic Extensions
+; ============================================
+; REQUIRED EXTENSIONS FOR LARAVEL
+; ============================================
+extension=curl
+extension=fileinfo
+extension=mbstring
+extension=openssl
+extension=pdo_mysql
+extension=zip
+
+; ============================================
+; ORACLE OCI8 EXTENSION - REQUIRED
+; ============================================
+; Make sure Oracle Instant Client is installed and in PATH
+extension=oci8_19
+; For older PHP versions, use: extension=php_oci8.dll
+
+; ============================================
+; OPTIONAL EXTENSIONS
+; ============================================
+extension=gd
+extension=intl
+extension=exif
+extension=sodium
+
+[CLI Server]
+cli_server.color = On
+
+[Date]
+date.timezone = Asia/Riyadh
+
+[Pdo_mysql]
+pdo_mysql.default_socket=
+
+[mail function]
+SMTP = localhost
+smtp_port = 25
+mail.add_x_header = Off
+
+[ODBC]
+odbc.allow_persistent = On
+odbc.check_persistent = On
+odbc.max_persistent = -1
+odbc.max_links = -1
+odbc.defaultlrl = 4096
+odbc.defaultbinmode = 1
+
+[MySQLi]
+mysqli.max_persistent = -1
+mysqli.allow_persistent = On
+mysqli.max_links = -1
+mysqli.default_port = 3306
+mysqli.default_socket =
+mysqli.default_host =
+mysqli.default_user =
+mysqli.default_pw =
+mysqli.reconnect = Off
+
+[mysqlnd]
+mysqlnd.collect_statistics = On
+mysqlnd.collect_memory_statistics = Off
+
+[OCI8]
+; ============================================
+; ORACLE OCI8 SETTINGS
+; ============================================
+; Connection: Enables privileged connections using external credentials
+oci8.privileged_connect = Off
+
+; Connection: The default database and service name to use
+oci8.default_prefetch = 100
+
+; Connection: Statement cache size
+oci8.statement_cache_size = 20
+
+; Connection: Statement prefetch count
+oci8.prefetch_lob_size = 0
+
+; Tuning: Sets the maximum time (in milliseconds) that a given call to OCIReadString() may take
+oci8.max_persistent = -1
+
+; Tuning: Maximum number of persistent OCI8 connections per process
+oci8.persistent_timeout = -1
+
+; Tuning: Connection idle timeout
+oci8.ping_interval = 60
+
+; Tuning: Connection mode (1 = CDB, 0 = Non-CDB)
+oci8.connection_class =
+
+; Tuning: Events mode
+oci8.events = Off
+
+; Tuning: Old close semantics
+oci8.old_oci_close_semantics = Off
+
+[Session]
+session.save_handler = files
+session.use_strict_mode = 0
+session.use_cookies = 1
+session.use_only_cookies = 1
+session.name = PHPSESSID
+session.auto_start = 0
+session.cookie_lifetime = 0
+session.cookie_path = /
+session.cookie_domain =
+session.cookie_httponly =
+session.cookie_samesite =
+session.serialize_handler = php
+session.gc_probability = 1
+session.gc_divisor = 1000
+session.gc_maxlifetime = 1440
+session.referer_check =
+session.cache_limiter = nocache
+session.cache_expire = 180
+session.use_trans_sid = 0
+session.sid_length = 26
+session.trans_sid_tags = "a=href,area=href,frame=src,form="
+session.sid_bits_per_character = 5
+
+[Assertion]
+zend.assertions = -1
+
+[Tidy]
+tidy.clean_output = Off
+
+[soap]
+soap.wsdl_cache_enabled = 1
+soap.wsdl_cache_dir = "/tmp"
+soap.wsdl_cache_ttl = 86400
+soap.wsdl_cache_limit = 5
+
+[ldap]
+ldap.max_links = -1
+
+[curl]
+curl.cainfo =
+
+[openssl]
+openssl.cafile =
+openssl.capath =
