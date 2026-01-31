@@ -7,129 +7,105 @@ A Laravel application that connects directly to Oracle Database and displays dat
 - Direct Oracle Database connection using `yajra/laravel-oci8`
 - PHP OCI8 extension for native Oracle connectivity
 - Responsive Blade templates with styled data table
-- Easy Windows deployment
+- **Offline Windows deployment** - All dependencies included
+- Oracle Instant Client DLLs included
 
 ---
 
-## Windows Installation Guide
+## Windows Offline Installation Guide
 
-### Prerequisites
+This repository includes all required files for offline installation on Windows.
 
-Before installing this application on Windows, you need to install the following:
+### What's Included
 
-### Step 1: Install PHP 8.2 or higher
+| Folder | Contents |
+|--------|----------|
+| `vendor/` | All Composer dependencies (no internet needed) |
+| `windows-setup/oracle-dlls/` | Oracle Instant Client 23.7 DLLs (except oraociei.dll*) |
+| `windows-setup/php-ext/` | PHP OCI8 extension instructions |
+| `windows-setup/php.ini.example` | Sample PHP configuration |
+| `windows-setup/install.bat` | Installation script |
+
+---
+
+### Step 1: Install PHP 8.3 (Download before going offline)
 
 1. Download PHP for Windows from: https://windows.php.net/download/
-   - Choose **VS16 x64 Thread Safe** version (recommended)
-   - Download the ZIP file
+   - Choose **VS16 x64 Thread Safe** version
+   - Download: `php-8.3.x-Win32-vs16-x64.zip`
 
-2. Extract PHP to `C:\php` (or your preferred location)
+2. Extract PHP to `C:\php`
 
 3. Add PHP to System PATH:
    - Open **System Properties** → **Environment Variables**
    - Under **System Variables**, find `Path` and click **Edit**
-   - Add `C:\php` (or your PHP installation path)
-   - Click **OK** to save
+   - Add `C:\php`
+   - Click **OK**
 
-4. Verify installation:
-   ```cmd
-   php -v
-   ```
+4. Configure PHP:
+   - Copy `C:\php\php.ini-development` to `C:\php\php.ini`
+   - Or use `windows-setup\php.ini.example` from this repo
 
-### Step 2: Install Composer
-
-1. Download Composer from: https://getcomposer.org/download/
-2. Run the installer (`Composer-Setup.exe`)
-3. Follow the installation wizard
-4. Verify installation:
-   ```cmd
-   composer -V
-   ```
-
-### Step 3: Install Oracle Instant Client
-
-1. Download Oracle Instant Client from:
-   https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
-
-2. Download these packages:
-   - **Basic Package** (instantclient-basic-windows.x64-XX.X.X.X.X.zip)
-   - **SDK Package** (instantclient-sdk-windows.x64-XX.X.X.X.X.zip)
-
-3. Extract both packages to `C:\oracle\instantclient_23_7` (or similar)
-
-4. Add Oracle Instant Client to System PATH:
-   - Open **System Properties** → **Environment Variables**
-   - Under **System Variables**, find `Path` and click **Edit**
-   - Add `C:\oracle\instantclient_23_7`
-   - Click **OK** to save
-
-5. Create environment variable `ORACLE_HOME`:
-   - Under **System Variables**, click **New**
-   - Variable name: `ORACLE_HOME`
-   - Variable value: `C:\oracle\instantclient_23_7`
-
-6. **IMPORTANT**: Copy these DLL files from Oracle Instant Client to your PHP folder (`C:\php`):
-   - `oci.dll`
-   - `oraociei23.dll` (or similar version)
-   - `orannzsbb23.dll`
-   - `oraons.dll`
-
-### Step 4: Configure PHP for Oracle
-
-1. Navigate to your PHP installation folder (`C:\php`)
-
-2. Copy `php.ini-development` to `php.ini`
-
-3. Edit `php.ini` and enable/add these extensions:
+5. Edit `php.ini` and enable these extensions:
    ```ini
+   extension_dir = "ext"
    extension=curl
    extension=fileinfo
    extension=mbstring
    extension=openssl
-   extension=pdo_mysql
    extension=zip
-   extension=oci8_19
+   extension=oci8
    ```
 
-4. Set the extension directory (uncomment and update):
-   ```ini
-   extension_dir = "ext"
-   ```
+### Step 2: Install PHP OCI8 Extension (Download before going offline)
 
-5. You can also use the sample `php.ini.example` from `windows-setup` folder
+1. Download from: https://windows.php.net/downloads/pecl/releases/oci8/3.4.1/
+   - For PHP 8.3: `php_oci8-3.4.1-8.3-ts-vs16-x64.zip`
 
-6. Verify OCI8 is loaded:
+2. Extract and copy `php_oci8.dll` to `C:\php\ext\`
+
+### Step 3: Install Oracle Instant Client (MOSTLY INCLUDED)
+
+Most Oracle Instant Client DLLs are included in this repository!
+
+**IMPORTANT**: Download `oraociei.dll` (290MB) before going offline:
+1. Download from: https://www.oracle.com/database/technologies/instant-client/winx64-64-downloads.html
+2. Get: `instantclient-basic-windows.x64-23.7.0.25.01.zip`
+3. Extract and copy `oraociei.dll` to `windows-setup\oracle-dlls\`
+
+1. Copy ALL files from `windows-setup\oracle-dlls\` to `C:\oracle\instantclient_23_7\`
+
+2. Add to System PATH:
+   - Open **System Properties** → **Environment Variables**
+   - Edit `Path` variable
+   - Add: `C:\oracle\instantclient_23_7`
+
+3. Create environment variable:
+   - Variable name: `ORACLE_HOME`
+   - Variable value: `C:\oracle\instantclient_23_7`
+
+4. Copy these DLLs to PHP folder (`C:\php`):
+   - `oci.dll`
+   - `oraociei.dll`
+
+5. **Restart Command Prompt** after PATH changes
+
+### Step 4: Verify PHP OCI8 Installation
+
+```cmd
+php -m | findstr oci8
+```
+
+You should see `oci8` in the output.
+
+### Step 5: Configure the Application
+
+1. Copy `.env.example` to `.env`:
    ```cmd
-   php -m | findstr oci8
-   ```
-   You should see `oci8` in the output.
-
-### Step 5: Install the Laravel Application
-
-1. Clone or download this repository
-
-2. Open Command Prompt and navigate to the project folder:
-   ```cmd
-   cd C:\path\to\laravel-oracle-api
-   ```
-
-3. Run the installation script:
-   ```cmd
-   windows-setup\install.bat
-   ```
-
-   Or manually install:
-   ```cmd
-   composer install
    copy .env.example .env
-   php artisan key:generate
    ```
 
-### Step 6: Configure Database Connection
-
-1. Open `.env` file in the project root
-
-2. Update the Oracle database settings:
+2. Edit `.env` with your Oracle database settings:
    ```env
    DB_CONNECTION=oracle
    DB_HOST=your_oracle_host
@@ -140,22 +116,24 @@ Before installing this application on Windows, you need to install the following
    DB_PASSWORD=your_password
    ```
 
-3. Clear configuration cache:
+3. Generate application key:
+   ```cmd
+   php artisan key:generate
+   ```
+
+4. Clear caches:
    ```cmd
    php artisan config:clear
+   php artisan cache:clear
    ```
 
-### Step 7: Run the Application
+### Step 6: Run the Application
 
-1. Start the Laravel development server:
-   ```cmd
-   php artisan serve
-   ```
+```cmd
+php artisan serve
+```
 
-2. Open your browser and navigate to:
-   ```
-   http://localhost:8000
-   ```
+Open browser: http://localhost:8000
 
 ---
 
@@ -164,79 +142,47 @@ Before installing this application on Windows, you need to install the following
 ```
 laravel-oracle-api/
 ├── app/
-│   └── Http/
-│       └── Controllers/
-│           └── DataController.php    # Main controller
+│   └── Http/Controllers/
+│       └── DataController.php      # Main controller
 ├── config/
-│   └── oracle.php                    # Oracle configuration
-├── resources/
-│   └── views/
-│       ├── layouts/
-│       │   └── app.blade.php         # Main layout
-│       └── data/
-│           └── index.blade.php       # Data display view
-├── routes/
-│   └── web.php                       # Web routes
+│   └── oracle.php                  # Oracle configuration
+├── resources/views/
+│   ├── layouts/app.blade.php       # Main layout
+│   └── data/index.blade.php        # Data display view
+├── vendor/                         # All dependencies (INCLUDED)
 ├── windows-setup/
-│   ├── install.bat                   # Windows installation script
-│   └── php.ini.example               # Sample PHP configuration
-├── .env.example                      # Environment template
-└── README.md                         # This file
+│   ├── oracle-dlls/                # Oracle Instant Client (INCLUDED)
+│   │   ├── oci.dll
+│   │   ├── oraociei.dll
+│   │   └── ... (all DLLs)
+│   ├── php-ext/                    # PHP extension instructions
+│   ├── install.bat                 # Installation script
+│   └── php.ini.example             # Sample PHP config
+├── .env.example                    # Environment template
+└── README.md                       # This file
 ```
 
 ---
 
-## Configuration Options
+## Quick Installation (Windows)
 
-### Oracle Connection (.env)
+```cmd
+:: 1. Copy Oracle DLLs
+xcopy windows-setup\oracle-dlls\* C:\oracle\instantclient_23_7\ /E /I
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `DB_CONNECTION` | Database driver | `oracle` |
-| `DB_HOST` | Oracle host | `localhost` |
-| `DB_PORT` | Oracle port | `1521` |
-| `DB_SERVICE_NAME` | Oracle service name | `XEPDB1` |
-| `DB_USERNAME` | Database username | `system` |
-| `DB_PASSWORD` | Database password | `your_password` |
+:: 2. Copy required DLLs to PHP
+copy C:\oracle\instantclient_23_7\oci.dll C:\php\
+copy C:\oracle\instantclient_23_7\oraociei.dll C:\php\
 
----
+:: 3. Configure environment
+copy .env.example .env
 
-## Troubleshooting
+:: 4. Generate key
+php artisan key:generate
 
-### Common Issues
-
-#### 1. OCI8 extension not loading
-
-**Error**: `PHP Warning: PHP Startup: Unable to load dynamic library 'oci8_19'`
-
-**Solution**:
-- Ensure Oracle Instant Client is in PATH
-- Copy required DLL files to PHP folder
-- Restart Command Prompt after PATH changes
-
-#### 2. ORA-12541: TNS:no listener
-
-**Error**: Cannot connect to Oracle database
-
-**Solution**:
-- Verify Oracle database is running
-- Check `DB_HOST` and `DB_PORT` in `.env`
-- Ensure firewall allows connection on port 1521
-
-#### 3. ORA-12505: TNS:listener does not currently know of SID
-
-**Error**: SID not found
-
-**Solution**:
-- Use `DB_SERVICE_NAME` instead of `DB_DATABASE`
-- Verify the service name with your DBA
-
-#### 4. Composer install fails
-
-**Solution**:
-- Run `composer clear-cache`
-- Delete `vendor` folder and `composer.lock`
-- Run `composer install` again
+:: 5. Run
+php artisan serve
+```
 
 ---
 
@@ -267,22 +213,61 @@ SELECT NAME, STATUS FROM SAMPLE_ITEMS;
 
 ---
 
-## Technologies Used
+## Configuration Options
 
-- **Laravel 12.x** - PHP Framework
-- **PHP 8.2+** - Server-side language
-- **yajra/laravel-oci8** - Oracle database driver for Laravel
-- **Oracle Database** - Database system
-- **Blade** - Laravel's templating engine
+### Oracle Connection (.env)
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `DB_CONNECTION` | Database driver | `oracle` |
+| `DB_HOST` | Oracle host | `192.168.1.100` |
+| `DB_PORT` | Oracle port | `1521` |
+| `DB_SERVICE_NAME` | Oracle service name | `XEPDB1` |
+| `DB_USERNAME` | Database username | `system` |
+| `DB_PASSWORD` | Database password | `your_password` |
 
 ---
 
-## License
+## Troubleshooting
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### OCI8 extension not loading
+
+**Error**: `PHP Warning: Unable to load dynamic library 'oci8'`
+
+**Solution**:
+- Ensure Oracle Instant Client is in PATH
+- Copy `oci.dll` and `oraociei.dll` to PHP folder
+- Restart Command Prompt
+
+### ORA-12541: TNS:no listener
+
+**Solution**:
+- Verify Oracle database is running
+- Check `DB_HOST` and `DB_PORT`
+- Check firewall settings
+
+### ORA-12505: TNS:listener does not know of SID
+
+**Solution**:
+- Use `DB_SERVICE_NAME` instead of `DB_DATABASE`
+- Verify service name with DBA
+
+---
+
+## Technologies
+
+- Laravel 12.x
+- PHP 8.3+
+- yajra/laravel-oci8
+- Oracle Database
+- Blade Templates
 
 ---
 
 ## Author
 
 Nasser
+
+## License
+
+MIT License

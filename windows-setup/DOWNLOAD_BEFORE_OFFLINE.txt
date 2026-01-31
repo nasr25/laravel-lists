@@ -1,0 +1,70 @@
+============================================
+DOWNLOAD THESE FILES BEFORE GOING OFFLINE
+============================================
+
+Download ALL these files and place them in the specified folders.
+
+============================================
+1. PHP 8.3 FOR WINDOWS
+============================================
+URL: https://windows.php.net/downloads/releases/php-8.3.14-Win32-vs16-x64.zip
+
+Save to: Any location, extract to C:\php
+
+============================================
+2. PHP OCI8 EXTENSION
+============================================
+URL: https://windows.php.net/downloads/pecl/releases/oci8/3.4.1/php_oci8-3.4.1-8.3-ts-vs16-x64.zip
+
+After download:
+- Extract the zip file
+- Copy php_oci8.dll to: windows-setup\php-ext\
+- Also copy to: C:\php\ext\ (during installation)
+
+============================================
+3. ORACLE INSTANT CLIENT (LARGE FILE - 290MB)
+============================================
+URL: https://download.oracle.com/otn_software/nt/instantclient/2370000/instantclient-basic-windows.x64-23.7.0.25.01.zip
+
+After download:
+- Extract the zip file
+- Copy ONLY oraociei.dll to: windows-setup\oracle-dlls\
+
+============================================
+4. VISUAL C++ REDISTRIBUTABLE (Required by PHP)
+============================================
+URL: https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+Run this installer on the Windows machine.
+
+============================================
+FOLDER STRUCTURE AFTER DOWNLOADS:
+============================================
+
+laravel-lists/
+├── windows-setup/
+│   ├── oracle-dlls/
+│   │   ├── oci.dll (included)
+│   │   ├── oraociei.dll (YOU DOWNLOAD THIS)
+│   │   └── ... other dlls (included)
+│   └── php-ext/
+│       └── php_oci8.dll (YOU DOWNLOAD THIS)
+└── ...
+
+============================================
+DIRECT DOWNLOAD LINKS (copy to browser):
+============================================
+
+PHP 8.3:
+https://windows.php.net/downloads/releases/php-8.3.14-Win32-vs16-x64.zip
+
+PHP OCI8:
+https://windows.php.net/downloads/pecl/releases/oci8/3.4.1/php_oci8-3.4.1-8.3-ts-vs16-x64.zip
+
+Oracle Instant Client:
+https://download.oracle.com/otn_software/nt/instantclient/2370000/instantclient-basic-windows.x64-23.7.0.25.01.zip
+
+VC++ Redistributable:
+https://aka.ms/vs/17/release/vc_redist.x64.exe
+
+============================================
